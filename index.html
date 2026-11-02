@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>貨櫃內陸運送運費請款核算明細表.xlsx - Excel</title>
-  <!-- MQTT 雲端即時連線庫 (加載失敗會自動降級為本地廣播模式，絕不白畫面) -->
+  <title>2026年度貨櫃內陸運送運費請款核算明細表.xlsx - Excel</title>
+  <!-- MQTT 雲端即時連線庫 (跨電腦連線、免架伺服器) -->
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
   <style>
     :root {
@@ -13,18 +13,18 @@
       --excel-green-light: #e8f5e9;
       --ribbon-bg: #f3f2f1;
       --border-gray: #d4d4d4;
-      --cell-border: #d4d4d4;
-      --header-bg: #f2f2f2;
-      --header-text: #000000;
+      --cell-border: #e1dfdd;
+      --header-bg: #f8f9fa;
+      --header-text: #495057;
       --select-border: #107c41;
-      --text-main: #000000;
+      --text-main: #212529;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'PMingLiU', '新細明體', 'Segoe UI', -apple-system, sans-serif;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", "微軟正黑體", Roboto, sans-serif;
       user-select: none;
     }
 
@@ -35,20 +35,19 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      font-size: 11px;
+      font-size: 12px;
     }
 
     /* 頂部 Excel 綠色標題列 */
     .title-bar {
       background-color: var(--excel-green);
       color: white;
-      height: 36px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 10px;
       font-size: 12px;
-      font-family: 'Segoe UI', sans-serif;
     }
 
     .title-left {
@@ -82,7 +81,7 @@
 
     .file-title {
       font-weight: 600;
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.2px;
     }
 
@@ -104,22 +103,6 @@
       gap: 14px;
     }
 
-    .user-profile-badge {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      padding: 3px 8px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: background 0.15s ease;
-    }
-
-    .user-profile-badge:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
     .boss-key-btn {
       background: rgba(255, 255, 255, 0.12);
       color: #e8f5e9;
@@ -138,19 +121,21 @@
       color: #ffffff;
       border-color: rgba(255, 255, 255, 0.45);
     }
+    .boss-key-btn:active {
+      background: rgba(0, 0, 0, 0.15);
+    }
 
-    /* Ribbon 功能區 */
+    /* Ribbon 功能區選單分頁 */
     .ribbon-tabs {
       background-color: var(--excel-green);
       display: flex;
       padding: 0 10px;
       color: white;
       font-size: 12px;
-      font-family: 'Segoe UI', sans-serif;
     }
 
     .ribbon-tab {
-      padding: 5px 14px;
+      padding: 6px 14px;
       cursor: pointer;
       border-bottom: 3px solid transparent;
       opacity: 0.9;
@@ -166,16 +151,16 @@
       opacity: 1;
     }
 
+    /* 工具列 */
     .ribbon-toolbar {
       background: var(--ribbon-bg);
       border-bottom: 1px solid var(--border-gray);
-      height: 56px;
+      height: 64px;
       display: flex;
       align-items: center;
       padding: 2px 10px;
       gap: 12px;
       overflow-x: auto;
-      font-family: 'Segoe UI', sans-serif;
     }
 
     .toolbar-group {
@@ -190,7 +175,7 @@
     .btn-tool {
       background: transparent;
       border: 1px solid transparent;
-      padding: 3px 6px;
+      padding: 4px 6px;
       border-radius: 2px;
       cursor: pointer;
       display: flex;
@@ -201,29 +186,28 @@
     }
     .btn-tool:hover { background: #e5e5e5; border-color: #ccc; }
 
-    /* 公式列 */
+    /* 公式列 (發言輸入框) */
     .formula-bar-container {
       display: flex;
       align-items: center;
       background: white;
       border-bottom: 1px solid var(--border-gray);
-      height: 30px;
+      height: 32px;
       padding: 2px 8px;
       gap: 8px;
     }
 
     .name-box {
       width: 75px;
-      height: 22px;
+      height: 24px;
       border: 1px solid var(--border-gray);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      color: #333;
+      font-weight: 600;
+      color: #444;
       background: #fafafa;
-      font-size: 11px;
-      font-family: 'Segoe UI', monospace;
+      font-size: 12px;
     }
 
     .formula-icon {
@@ -231,7 +215,7 @@
       font-family: "Times New Roman", serif;
       font-weight: bold;
       color: #777;
-      font-size: 14px;
+      font-size: 15px;
       padding: 0 4px;
     }
 
@@ -244,10 +228,10 @@
 
     .formula-input {
       width: 100%;
-      height: 22px;
+      height: 24px;
       border: 1px solid transparent;
       padding: 0 8px;
-      font-size: 11px;
+      font-size: 12px;
       outline: none;
       user-select: text;
     }
@@ -263,7 +247,6 @@
       font-size: 11px;
       color: #888;
       pointer-events: none;
-      font-family: 'Segoe UI', sans-serif;
     }
 
     /* 試算表主體區 */
@@ -287,70 +270,64 @@
       border-collapse: collapse;
       width: 100%;
       table-layout: fixed;
-      font-size: 11px;
-      color: #000;
+      font-size: 12px;
     }
 
     table.excel-table th, table.excel-table td {
       border: 1px solid var(--cell-border);
-      padding: 2px 4px;
-      height: 21px;
+      padding: 5px 8px;
+      height: 28px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      line-height: 1.2;
     }
 
     table.excel-table th {
       background: var(--header-bg);
       color: var(--header-text);
-      font-weight: normal;
+      font-weight: 600;
       text-align: center;
       position: sticky;
       top: 0;
       z-index: 10;
-      border: 1px solid #b5b5b5;
+      border-bottom: 2px solid #bbb;
     }
 
-    .col-idx { width: 34px; background: #e9e9e9; text-align: center; color: #555; }
-    .col-date { width: 75px; text-align: center; font-family: 'Segoe UI', monospace; }
-    .col-size { width: 42px; text-align: center; }
-    .col-weight { width: 50px; text-align: center; }
-    .col-plate { width: 72px; text-align: center; font-family: 'Segoe UI', monospace; }
-    .col-station { width: 52px; text-align: center; }
-    .col-container-no { width: 110px; text-align: center; font-family: 'Segoe UI', monospace; }
+    /* 各欄位設定 */
+    .col-row-idx { width: 45px; background: #f0f0f0; text-align: center; color: #777; }
+    .col-date { width: 85px; text-align: center; font-family: monospace; }
+    .col-size { width: 55px; text-align: center; }
+    .col-weight { width: 60px; text-align: center; }
+    .col-plate { width: 85px; text-align: center; font-family: monospace; font-weight: 600; }
+    .col-station { width: 65px; text-align: center; }
+    .col-containerno { width: 120px; text-align: center; font-family: monospace; color: #1e3a8a; }
     .col-origin { width: 95px; text-align: left; }
     .col-dest { width: 95px; text-align: left; }
-    .col-fare { width: 65px; text-align: right; font-family: 'Segoe UI', monospace; }
-    .col-alloc-fare { width: 68px; text-align: right; font-family: 'Segoe UI', monospace; }
-    .col-memo { width: auto; min-width: 220px; text-align: left; user-select: text; }
-
-    tr.alert-red td {
-      color: #d90429 !important;
-    }
+    .col-fare { width: 80px; text-align: right; font-family: monospace; color: #0f5132; }
+    .col-allocfare { width: 80px; text-align: right; font-family: monospace; color: #0b552c; }
+    .col-memo { width: auto; color: #111; user-select: text; }
 
     tr.chat-row:hover td {
-      background-color: #f1f7fd;
+      background-color: #f7fafc;
     }
 
     tr.chat-row.selected td {
-      outline: 1.5px solid var(--select-border);
-      outline-offset: -1.5px;
-      background: rgba(16, 124, 65, 0.05);
+      outline: 2px solid var(--select-border);
+      outline-offset: -2px;
+      background: rgba(16, 124, 65, 0.04);
     }
 
     /* 底部狀態列 */
     .bottom-bar {
       background: #f3f2f1;
       border-top: 1px solid var(--border-gray);
-      height: 26px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 10px;
       font-size: 11px;
-      color: #444;
-      font-family: 'Segoe UI', sans-serif;
+      color: #555;
     }
 
     .sheet-tabs {
@@ -360,13 +337,14 @@
     }
 
     .sheet-tab {
-      padding: 2px 14px;
+      padding: 4px 16px;
       background: #e1dfdd;
       border: 1px solid #ccc;
       border-bottom: none;
-      border-top-left-radius: 3px;
-      border-top-right-radius: 3px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
       cursor: pointer;
+      font-weight: 500;
     }
 
     .sheet-tab.active {
@@ -378,21 +356,19 @@
 
     .status-stats {
       display: flex;
-      gap: 14px;
-      font-family: 'Segoe UI', monospace;
-      font-size: 11px;
+      gap: 16px;
+      font-family: monospace;
     }
 
-    /* 登入視窗 */
+    /* 登入設定視窗 */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.45);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      font-family: 'Segoe UI', sans-serif;
     }
 
     .excel-modal {
@@ -407,7 +383,7 @@
     .modal-header {
       background: var(--excel-green);
       color: white;
-      padding: 9px 14px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -435,16 +411,19 @@
     }
 
     .form-group input, .form-group select {
-      padding: 5px 8px;
+      padding: 6px 8px;
       border: 1px solid #aaa;
       border-radius: 2px;
       font-size: 12px;
       outline: none;
     }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--excel-green);
+    }
 
     .modal-footer {
       background: #f8f9fa;
-      padding: 10px 18px;
+      padding: 12px 18px;
       display: flex;
       justify-content: flex-end;
       gap: 10px;
@@ -455,7 +434,7 @@
       background: var(--excel-green);
       color: white;
       border: 1px solid var(--excel-green-dark);
-      padding: 5px 16px;
+      padding: 6px 18px;
       border-radius: 2px;
       font-size: 12px;
       font-weight: 600;
@@ -463,7 +442,7 @@
     }
     .btn-primary:hover { background: var(--excel-green-dark); }
 
-    /* 老闆鍵畫面 */
+    /* 老闆鍵畫面 (ESC 切換) */
     .boss-screen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -474,7 +453,10 @@
       padding: 24px 32px;
       overflow-y: auto;
       user-select: text;
-      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .boss-screen.active {
+      display: flex;
     }
 
     .boss-header {
@@ -531,23 +513,21 @@
     <div class="title-left">
       <div class="app-icon">X</div>
       <div class="auto-save">
-        <span>車隊調度連線</span>
+        <span>雲端同步中</span>
         <span id="connIndicator" style="color:#a7f3d0;">● 連線中</span>
       </div>
-      <div class="file-title">貨櫃內陸運送運費請款核算明細表.xlsx - Excel</div>
+      <div class="file-title">2026年度貨櫃內陸運送運費請款核算明細表.xlsx - Excel</div>
     </div>
     <div class="title-center">
       <span>🔍</span>
-      <span>搜尋櫃號、車號、請款起迄點、備註... (Alt+Q)</span>
+      <span>搜尋櫃號、車牌、請款起迄、備註 (Alt+Q)</span>
     </div>
     <div class="title-right">
-      <button class="boss-key-btn" onclick="toggleBossMode()" title="切換運務調度分析報告 (快捷鍵 ESC)">
-        <span>📊 運務稽核報表 (ESC)</span>
+      <button class="boss-key-btn" onclick="toggleBossMode()" title="切換財務總覽分析視圖 (快捷鍵 ESC)">
+        <span>📊 財務視圖 (ESC)</span>
       </button>
-      <div class="user-profile-badge" id="loginBtnTrigger" onclick="showLoginModal()" title="點擊設定調度員身分與站所">
-        <span id="userStatusTag" style="font-size:11px;">未登入調度員</span>
-        <span>👤</span>
-      </div>
+      <span id="userStatusTag" style="font-size:11px; opacity:0.9; cursor:pointer;" onclick="showLoginModal()">未登入帳號</span>
+      <span style="cursor:pointer;" onclick="showLoginModal()">👤</span>
     </div>
   </div>
 
@@ -556,6 +536,7 @@
     <div class="ribbon-tab">檔案</div>
     <div class="ribbon-tab active">常用</div>
     <div class="ribbon-tab">插入</div>
+    <div class="ribbon-tab">繪圖</div>
     <div class="ribbon-tab">版面配置</div>
     <div class="ribbon-tab">公式</div>
     <div class="ribbon-tab">資料</div>
@@ -567,27 +548,27 @@
   <div class="ribbon-toolbar">
     <div class="toolbar-group">
       <button class="btn-tool" onclick="exportToCSV()">
-        <span style="font-size:15px;">📥</span>
-        <span>匯出請款單</span>
+        <span style="font-size:16px;">📥</span>
+        <span>匯出報表</span>
       </button>
       <button class="btn-tool" onclick="manualClear()">
-        <span style="font-size:15px;">🧹</span>
-        <span>清除資料</span>
+        <span style="font-size:16px;">🧹</span>
+        <span>立刻清空</span>
       </button>
     </div>
 
     <div class="toolbar-group">
-      <div style="display:flex; flex-direction:column; gap:3px;">
-        <select style="font-size:11px; padding:1px 3px;">
-          <option>新細明體</option>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <select style="font-size:11px; padding:2px;">
           <option>微軟正黑體</option>
           <option>Calibri</option>
+          <option>Segoe UI</option>
         </select>
         <div style="display:flex; gap:3px;">
-          <button style="font-weight:bold; width:19px; font-size:10px;">B</button>
-          <button style="font-style:italic; width:19px; font-size:10px;">I</button>
-          <button style="text-decoration:underline; width:19px; font-size:10px;">U</button>
-          <button style="border:1px solid #bbb; width:19px; font-size:10px;">田</button>
+          <button style="font-weight:bold; width:20px; font-size:10px;">B</button>
+          <button style="font-style:italic; width:20px; font-size:10px;">I</button>
+          <button style="text-decoration:underline; width:20px; font-size:10px;">U</button>
+          <button style="border:1px solid #bbb; width:20px; font-size:10px;">田</button>
         </div>
       </div>
     </div>
@@ -596,17 +577,17 @@
       <div style="display:flex; align-items:center; gap:6px;">
         <input type="checkbox" id="jargonFilter" checked style="cursor:pointer;">
         <label for="jargonFilter" style="font-size:11px; cursor:pointer; color:#333;">
-          啟用調度作業註記前綴
+          調度公文術語模式
         </label>
       </div>
     </div>
 
-    <!-- 共用頻道指示 -->
+    <!-- 固定的全體同仁共用頻道指示 -->
     <div class="toolbar-group" style="border:none;">
-      <div class="fixed-room-badge" title="預設所有人皆進入此固定公用調度頻道">
-        <span>🚛 預設調度總台：</span>
-        <span id="displayRoomTag" style="font-family:monospace; color:#0b552c;">LOGISTICS-MAIN-HQ</span>
-        <span style="font-size:10px; color:#555; cursor:pointer; text-decoration:underline;" onclick="promptChangeRoom()">[切換車隊頻道]</span>
+      <div class="fixed-room-badge" title="所有人打開網頁皆預設連進此固定頻道，跨電腦即時連線">
+        <span>🏢 預設公用頻道：</span>
+        <span id="displayRoomTag" style="font-family:monospace; color:#0b552c;">CORP-LOGISTICS-HUB</span>
+        <span style="font-size:10px; color:#555; cursor:pointer; text-decoration:underline;" onclick="promptChangeRoom()">[切換私密房]</span>
       </div>
     </div>
   </div>
@@ -620,30 +601,30 @@
         type="text" 
         id="formulaInput" 
         class="formula-input" 
-        placeholder="在此輸入聊天訊息 / 調度備註說明... (按 Enter 提交並寫入「備註」欄位)" 
+        placeholder="在此輸入試算表備註 / 聊天內容... (按 Enter 提交並寫入「備註」欄)" 
         autocomplete="off"
       />
-      <div class="formula-hint">按 Enter 發送備註</div>
+      <div class="formula-hint">按 Enter 鍵發送備註</div>
     </div>
   </div>
 
-  <!-- Excel 儲存格資料表 (依照截圖 11 個欄位排版) -->
+  <!-- Excel 儲存格資料表 (需求 1：11 個專用欄位) -->
   <div class="sheet-wrapper">
     <div class="table-container" id="tableContainer">
       <table class="excel-table" id="excelTable">
         <thead>
           <tr>
-            <th class="col-idx"></th>
+            <th class="col-row-idx"></th>
             <th class="col-date">日期</th>
             <th class="col-size">呎吋</th>
             <th class="col-weight">載重</th>
             <th class="col-plate">車牌號碼</th>
             <th class="col-station">站所</th>
-            <th class="col-container-no">貨櫃號碼</th>
+            <th class="col-containerno">貨櫃號碼</th>
             <th class="col-origin">請款起點</th>
             <th class="col-dest">請款迄點</th>
             <th class="col-fare">運費</th>
-            <th class="col-alloc-fare">分配運費</th>
+            <th class="col-allocfare">分配運費</th>
             <th class="col-memo">備註</th>
           </tr>
         </thead>
@@ -655,19 +636,19 @@
   <!-- 底部狀態列與分頁標籤 -->
   <div class="bottom-bar">
     <div class="sheet-tabs">
-      <div class="sheet-tab active">運費請款核算表</div>
-      <div class="sheet-tab">司機趟次日報</div>
-      <div class="sheet-tab">聯運外車分攤</div>
-      <span style="cursor:pointer; font-size:13px; margin-left:6px; color:#777;">＋</span>
+      <div class="sheet-tab active">2026_運費請款核算明細</div>
+      <div class="sheet-tab">聯運外車費用拆分</div>
+      <div class="sheet-tab">內部審計稽核</div>
+      <span style="cursor:pointer; font-size:14px; margin-left:6px; color:#777;">＋</span>
     </div>
     <div class="status-stats">
       <span id="connStatusText">通道已連線</span>
       <span>|</span>
-      <span>筆數: <b id="statCount">0</b></span>
+      <span>有效紀錄: <b id="statCount">0</b></span>
       <span>|</span>
       <span>運費加總: <b id="statSum">$ 0</b></span>
       <span>|</span>
-      <span>分配運費: <b id="statAllocSum">$ 0</b></span>
+      <span>平均運費: <b id="statAvg">$ 0</b></span>
       <span>|</span>
       <span>100% ⊕</span>
     </div>
@@ -677,40 +658,40 @@
   <div class="modal-overlay" id="loginModal">
     <div class="excel-modal">
       <div class="modal-header">
-        <span>Microsoft Excel - 請款系統人員認證</span>
+        <span>Microsoft Excel - 組織專案協同認證</span>
         <span style="cursor:pointer;" onclick="closeModal()">✕</span>
       </div>
       <div class="modal-body">
         <p style="color:#555; line-height:1.4;">
-          設定調度專員暱稱與所屬站所。全體人員預設連入<b>同一個預設調度頻道</b>，資料無伺服器留存，關閉瀏覽器或滿 4 小時自動銷毀。
+          設定您的經辦人員暱稱與所屬站所。全體同仁預設將自動連入<b>同一間固定公用頻道</b>，資料於重新整理時保留，滿 <b>24 小時</b>自動銷毀。
         </p>
         <div class="form-group">
-          <label>調度人員姓名 / 暱稱 <span style="color:red;">*</span></label>
-          <input type="text" id="nicknameInput" placeholder="例如：蕭專員、北區調度、Alex" />
+          <label>經辦人暱稱 / 同仁姓名 <span style="color:red;">*</span></label>
+          <input type="text" id="nicknameInput" placeholder="例如：蕭專員、調度組、Alex" />
         </div>
         <div class="form-group">
-          <label>所屬所別 / 調度中心</label>
+          <label>所屬所別 / 單位</label>
           <select id="deptInput">
-            <option value="基隆">基隆站 (Keelung)</option>
-            <option value="五堵">五堵站 (Wudu CY)</option>
+            <option value="基隆">基隆 (Keelung)</option>
+            <option value="五堵">五堵 (Wudu)</option>
             <option value="台北港">台北港 (Taipei Port)</option>
-            <option value="台中">台中站 (Taichung)</option>
-            <option value="高雄">高雄站 (Kaohsiung)</option>
+            <option value="台中">台中 (Taichung)</option>
+            <option value="高雄">高雄 (Kaohsiung)</option>
           </select>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-primary" onclick="confirmLogin()">進入請款總表</button>
+        <button class="btn-primary" onclick="confirmLogin()">進入試算表 (開始協同)</button>
       </div>
     </div>
   </div>
 
-  <!-- 老闆鍵畫面 (ESC 秒切換) -->
+  <!-- 老闆鍵畫面 (ESC 鍵秒切換) -->
   <div class="boss-screen" id="bossScreen">
     <div class="boss-header">
       <div>
-        <h2 style="font-size:22px; margin-bottom:4px;">車隊營運調度與進出口貨櫃運輸成本效益月報</h2>
-        <p style="color:#555; font-size:12px;">機密等級：內部核心運輸管理部限定 (稽核代碼：TRK-99218-A)</p>
+        <h2 style="font-size:22px; margin-bottom:4px;">2026 Q3-Q4 集團營業收入與現金流綜合評估分析報告</h2>
+        <p style="color:#555; font-size:12px;">機密等級：內部核心經理人限定 (內部稽核代號：AUD-99218-X)</p>
       </div>
       <div>
         <button class="btn-primary" style="background:#555; border:none;" onclick="toggleBossMode()">返回作業 (ESC)</button>
@@ -719,79 +700,72 @@
 
     <div class="boss-kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-title">本期運載總櫃量 (TEU)</div>
-        <div class="kpi-val">14,680 TEU</div>
-        <div class="kpi-change">▲ +6.4% 準點率 99.1%</div>
+        <div class="kpi-title">本季合併總營收 (NTD)</div>
+        <div class="kpi-val">$ 84,291,400</div>
+        <div class="kpi-change">▲ +14.8% YoY 成長</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-title">每百公里平均耗油量</div>
-        <div class="kpi-val">34.2 L</div>
-        <div class="kpi-change">▲ 符合節能標準規範</div>
+        <div class="kpi-title">營業毛利率 (Gross Margin)</div>
+        <div class="kpi-val">42.6 %</div>
+        <div class="kpi-change">▲ +2.1% 優於預期</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-title">平均提還櫃週轉時效</div>
-        <div class="kpi-val">1.62 天</div>
-        <div class="kpi-change">▼ 週轉時效提升 0.3天</div>
+        <div class="kpi-title">息稅折舊攤銷前淨利 (EBITDA)</div>
+        <div class="kpi-val">$ 21,950,000</div>
+        <div class="kpi-change">▲ +8.4% 健全穩定</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-title">外車支援每櫃調度成本</div>
-        <div class="kpi-val">$ 1,380</div>
-        <div class="kpi-change" style="color:#0d6efd;">▼ 撙節支出 4.8%</div>
+        <div class="kpi-title">研發與營運成本控管率</div>
+        <div class="kpi-val">19.2 %</div>
+        <div class="kpi-change" style="color:#0d6efd;">▼ 減少 1.5% 成本節省</div>
       </div>
     </div>
 
     <div class="boss-table-box">
-      <h3 style="font-size:14px; margin-bottom:12px;">各站所重櫃、空櫃運輸營業額統計明細表 (單位：TEU / 萬元)</h3>
+      <h3 style="font-size:14px; margin-bottom:12px;">年度各事業群利潤分析明細表 (單位：千元)</h3>
       <table style="width:100%; border-collapse:collapse; font-size:12px;" border="1" bordercolor="#e0e0e0">
         <thead style="background:#f0f2f5;">
-          <tr style="height:30px;">
-            <th style="padding:6px;">站所代號</th>
-            <th style="padding:6px;">站所名稱</th>
-            <th style="padding:6px; text-align:right;">進口重櫃</th>
-            <th style="padding:6px; text-align:right;">出口重櫃</th>
-            <th style="padding:6px; text-align:right;">空櫃調度</th>
-            <th style="padding:6px; text-align:right;">營業額 (NT$)</th>
+          <tr style="height:32px;">
+            <th style="padding:6px;">部門代號</th>
+            <th style="padding:6px;">事業單位名稱</th>
+            <th style="padding:6px; text-align:right;">核定預算</th>
+            <th style="padding:6px; text-align:right;">實際開支</th>
+            <th style="padding:6px; text-align:right;">執行率</th>
+            <th style="padding:6px; text-align:center;">內部審計評價</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="height:28px;"><td style="padding:6px; text-align:center;">ST-01</td><td style="padding:6px;">基隆貨櫃集散站</td><td style="padding:6px; text-align:right;">4,120</td><td style="padding:6px; text-align:right;">3,650</td><td style="padding:6px; text-align:right;">1,280</td><td style="padding:6px; text-align:right;">$ 19,450,000</td></tr>
-          <tr style="height:28px;"><td style="padding:6px; text-align:center;">ST-02</td><td style="padding:6px;">台北港貨櫃管制站</td><td style="padding:6px; text-align:right;">3,580</td><td style="padding:6px; text-align:right;">3,120</td><td style="padding:6px; text-align:right;">980</td><td style="padding:6px; text-align:right;">$ 15,620,000</td></tr>
-          <tr style="height:28px;"><td style="padding:6px; text-align:center;">ST-03</td><td style="padding:6px;">五堵集中保稅轉運中心</td><td style="padding:6px; text-align:right;">2,890</td><td style="padding:6px; text-align:right;">2,450</td><td style="padding:6px; text-align:right;">760</td><td style="padding:6px; text-align:right;">$ 12,840,000</td></tr>
+          <tr style="height:30px;"><td style="padding:6px; text-align:center;">BU-01</td><td style="padding:6px;">雲端伺服架構研發中心</td><td style="padding:6px; text-align:right;">$ 32,500</td><td style="padding:6px; text-align:right;">$ 30,120</td><td style="padding:6px; text-align:right;">92.6%</td><td style="padding:6px; text-align:center; color:#198754;">A級 優良</td></tr>
+          <tr style="height:30px;"><td style="padding:6px; text-align:center;">BU-02</td><td style="padding:6px;">亞太新市場推進專案部</td><td style="padding:6px; text-align:right;">$ 18,000</td><td style="padding:6px; text-align:right;">$ 17,650</td><td style="padding:6px; text-align:right;">98.0%</td><td style="padding:6px; text-align:center; color:#198754;">A級 達標</td></tr>
+          <tr style="height:30px;"><td style="padding:6px; text-align:center;">BU-03</td><td style="padding:6px;">全球供應鏈物流管控處</td><td style="padding:6px; text-align:right;">$ 24,000</td><td style="padding:6px; text-align:right;">$ 21,800</td><td style="padding:6px; text-align:right;">90.8%</td><td style="padding:6px; text-align:center; color:#198754;">A級 撙節</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
   <script>
-    const GLOBAL_DEFAULT_ROOM = "LOGISTICS-MAIN-HQ";
-    const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
+    // 需求 2：設定聊天紀錄 24 小時清除 (24 * 60 * 60 * 1000 ms)
+    const GLOBAL_DEFAULT_ROOM = "CORP-LOGISTICS-HUB";
+    const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
     let currentUser = {
-      nickname: '',
-      dept: '基隆',
+      nickname: localStorage.getItem('excel_user_nick') || '',
+      dept: localStorage.getItem('excel_user_dept') || '基隆',
       room: GLOBAL_DEFAULT_ROOM,
       clientId: 'client_' + Math.random().toString(36).substring(2, 9)
     };
-
-    try {
-      currentUser.nickname = localStorage.getItem('logistic_user_nick') || '';
-      currentUser.dept = localStorage.getItem('logistic_user_station') || '基隆';
-    } catch(e) {}
 
     let messages = [];
     let mqttClient = null;
     let localBroadcast = null;
 
-    /* 隨機生成庫 */
+    /* 需求 1：依截圖實務產生的隨機資料庫 */
     const SIZES = ["40", "20", "40HQ", "40", "40", "20"];
-    const WEIGHT_OPTIONS = [
-      "重", "重", "重", "空", "24.5", "21.8", "26.3", "28.0", "20.5", "3.8", "重", "25.2"
-    ];
+    const WEIGHTS = ["重", "重", "重", "空", "24.5", "21.8", "26.3", "20.5", "3.8", "25.2"];
     const TRUCK_PLATES = [
       "KL-839", "72-TX", "98-RU", "882-KK", "56-TX", 
       "81-UY", "312-AB", "77-QW", "19-TX", "905-KL",
-      "58-TX", "619-AC", "83-RU", "22-TX", "738-KK",
-      "92-TX", "37-RU", "116-AB", "49-TX", "852-KK"
+      "58-TX", "619-AC", "83-RU", "22-TX", "738-KK", "92-TX"
     ];
     const STATIONS = ["基隆", "五堵", "台北港", "台中", "高雄", "聯興", "台港"];
     const CONTAINER_PREFIXES = [
@@ -815,6 +789,7 @@
       { origin: "五堵台鳳", dest: "基隆西18", fare: 2200 },
       { origin: "基隆港東岸", dest: "中遠CY", fare: 2000 }
     ];
+
     const JARGON_PREFIXES = [
       "[交領櫃確認] ",
       "[重進空出] ",
@@ -826,114 +801,86 @@
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
-      try {
-        if (window.location.hash && window.location.hash.length > 1) {
-          currentUser.room = decodeURIComponent(window.location.hash.substring(1));
-        } else {
-          currentUser.room = GLOBAL_DEFAULT_ROOM;
-        }
-        document.getElementById('displayRoomTag').innerText = currentUser.room;
-
-        loadFromSession();
-
-        if (!currentUser.nickname) {
-          showLoginModal();
-        } else {
-          updateUserUI();
-          initConnection();
-        }
-
-        document.getElementById('formulaInput').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            sendMessage();
-          }
-        });
-
-        window.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            e.preventDefault();
-            toggleBossMode();
-          }
-        });
-
-        setInterval(purgeExpiredMessages, 30000);
-
-        window.addEventListener('beforeunload', () => {
-          try { sessionStorage.clear(); } catch(e){}
-        });
-      } catch (err) {
-        console.error("初始化執行異常", err);
+      if (window.location.hash && window.location.hash.length > 1) {
+        currentUser.room = decodeURIComponent(window.location.hash.substring(1));
+      } else {
+        currentUser.room = GLOBAL_DEFAULT_ROOM;
       }
+      document.getElementById('displayRoomTag').innerText = currentUser.room;
+
+      // 需求 2：重整頁面立刻讀出 24 小時內的歷史資料
+      loadSavedMessages();
+
+      if (!currentUser.nickname) {
+        showLoginModal();
+      } else {
+        updateUserUI();
+        initConnection();
+      }
+
+      document.getElementById('formulaInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          toggleBossMode();
+        }
+      });
+
+      // 每 30 秒自動清掃一次滿 24 小時的過期記錄
+      setInterval(purgeExpiredMessages, 30000);
     });
 
     function showLoginModal() {
-      try {
-        const modal = document.getElementById('loginModal');
-        if (modal) {
-          modal.style.display = 'flex';
-          document.getElementById('nicknameInput').value = currentUser.nickname || '';
-          document.getElementById('deptInput').value = currentUser.dept || '基隆';
-          setTimeout(() => {
-            const nickInput = document.getElementById('nicknameInput');
-            if (nickInput) nickInput.focus();
-          }, 100);
-        }
-      } catch(err) {
-        console.error("開啟彈窗失敗", err);
-      }
+      document.getElementById('loginModal').style.display = 'flex';
+      document.getElementById('nicknameInput').value = currentUser.nickname;
+      document.getElementById('deptInput').value = currentUser.dept;
+      setTimeout(() => document.getElementById('nicknameInput').focus(), 100);
     }
 
     function closeModal() {
-      try {
-        const modal = document.getElementById('loginModal');
-        if (modal) modal.style.display = 'none';
-        if (!currentUser.nickname) {
-          currentUser.nickname = '調度專員_' + Math.floor(100 + Math.random() * 900);
-          updateUserUI();
-          initConnection();
-        }
-      } catch(err){}
+      if (!currentUser.nickname) {
+        currentUser.nickname = '專案同仁_' + Math.floor(100 + Math.random() * 900);
+        updateUserUI();
+        initConnection();
+      }
+      document.getElementById('loginModal').style.display = 'none';
     }
 
     function confirmLogin() {
-      try {
-        const name = document.getElementById('nicknameInput').value.trim();
-        const dept = document.getElementById('deptInput').value;
+      const name = document.getElementById('nicknameInput').value.trim();
+      const dept = document.getElementById('deptInput').value;
 
-        if (!name) {
-          alert('請填寫調度員暱稱！');
-          return;
-        }
-
-        currentUser.nickname = name;
-        currentUser.dept = dept;
-
-        try {
-          localStorage.setItem('logistic_user_nick', name);
-          localStorage.setItem('logistic_user_station', dept);
-        } catch(e){}
-
-        updateUserUI();
-        document.getElementById('loginModal').style.display = 'none';
-        initConnection();
-      } catch(err) {
-        console.error(err);
+      if (!name) {
+        alert('請填寫經辦人員暱稱！');
+        return;
       }
+
+      currentUser.nickname = name;
+      currentUser.dept = dept;
+
+      try {
+        localStorage.setItem('excel_user_nick', name);
+        localStorage.setItem('excel_user_dept', dept);
+      } catch(e){}
+
+      updateUserUI();
+      document.getElementById('loginModal').style.display = 'none';
+      initConnection();
     }
 
     function updateUserUI() {
-      try {
-        const tag = document.getElementById('userStatusTag');
-        if (tag) {
-          tag.innerText = currentUser.nickname ? `${currentUser.nickname} (${currentUser.dept}站)` : '未登入調度員';
-        }
-      } catch(e){}
+      document.getElementById('userStatusTag').innerText = `👤 ${currentUser.nickname} (${currentUser.dept})`;
     }
 
     function promptChangeRoom() {
       const current = currentUser.room;
-      const target = prompt(`目前頻道為全體預設公用 [${current}]。\n若需切換至專屬私密群組，請輸入代碼 (留空則恢復預設)：`, current);
+      const target = prompt(`目前頻道為全體預設共用 [${current}]。\n若需切換至私密會議小房間，請輸入自訂代碼 (留空則恢復預設)：`, current);
       if (target === null) return;
 
       const newRoom = target.trim() || GLOBAL_DEFAULT_ROOM;
@@ -944,29 +891,18 @@
       document.getElementById('displayRoomTag').innerText = newRoom;
 
       messages = [];
-      try { sessionStorage.removeItem('logistic_cached_msgs'); } catch(e){}
       rebuildTable();
+      loadSavedMessages();
       initConnection();
     }
 
+    // 需求 2：跨電腦連線 (MQTT WebSocket)
     function initConnection() {
-      try {
-        if (localBroadcast) localBroadcast.close();
-        if (typeof BroadcastChannel !== 'undefined') {
-          localBroadcast = new BroadcastChannel('corp_logistic_' + currentUser.room);
-          localBroadcast.onmessage = (event) => {
-            handleIncomingPacket(event.data);
-          };
-        }
-      } catch(e) {}
-
-      // 如果 MQTT 腳本載入失敗或被阻擋，保證不會崩潰，維持本地模式正常運作
-      if (typeof mqtt === 'undefined') {
-        document.getElementById('connIndicator').innerText = '● 本地安全通道';
-        document.getElementById('connIndicator').style.color = '#a7f3d0';
-        document.getElementById('connStatusText').innerText = `已啟用本機分頁連線：${currentUser.room}`;
-        return;
-      }
+      if (localBroadcast) localBroadcast.close();
+      localBroadcast = new BroadcastChannel('corp_excel_' + currentUser.room);
+      localBroadcast.onmessage = (event) => {
+        handleIncomingPacket(event.data);
+      };
 
       if (mqttClient) {
         try { mqttClient.end(true); } catch(e){}
@@ -977,61 +913,62 @@
       document.getElementById('connStatusText').innerText = `正在加入 [${currentUser.room}]...`;
 
       const brokerUrl = 'wss://broker.emqx.io:8084/mqtt';
-      const topic = `corp_logistic_v5_safe/${encodeURIComponent(currentUser.room)}`;
+      const topic = `corp_excel_v24h_fixed/${encodeURIComponent(currentUser.room)}`;
 
-      try {
-        mqttClient = mqtt.connect(brokerUrl, {
-          clientId: currentUser.clientId,
-          clean: true,
-          connectTimeout: 5000,
-          reconnectPeriod: 3000
-        });
+      mqttClient = mqtt.connect(brokerUrl, {
+        clientId: currentUser.clientId,
+        clean: true,
+        connectTimeout: 6000,
+        reconnectPeriod: 3000
+      });
 
-        mqttClient.on('connect', () => {
-          document.getElementById('connIndicator').innerText = '● 雲端在線';
-          document.getElementById('connIndicator').style.color = '#a7f3d0';
-          document.getElementById('connStatusText').innerText = `已連入頻道：${currentUser.room}`;
-
-          mqttClient.subscribe(topic, { qos: 0 });
-
-          const reqPacket = {
-            type: 'SYNC_REQUEST',
-            senderId: currentUser.clientId,
-            room: currentUser.room
-          };
-          mqttClient.publish(topic, JSON.stringify(reqPacket));
-        });
-
-        mqttClient.on('message', (t, payload) => {
-          try {
-            const packet = JSON.parse(payload.toString());
-            handleIncomingPacket(packet);
-          } catch (err) {}
-        });
-
-        mqttClient.on('error', () => {
-          document.getElementById('connIndicator').innerText = '● 本地通道';
-          document.getElementById('connIndicator').style.color = '#a7f3d0';
-        });
-      } catch (e) {
-        document.getElementById('connIndicator').innerText = '● 本地通道';
+      mqttClient.on('connect', () => {
+        document.getElementById('connIndicator').innerText = '● 雲端在線';
         document.getElementById('connIndicator').style.color = '#a7f3d0';
-      }
+        document.getElementById('connStatusText').innerText = `已連入頻道：${currentUser.room}`;
+
+        mqttClient.subscribe(topic, { qos: 0 });
+
+        // 向所有在線電腦廣播請求同步最新歷史紀錄
+        const reqPacket = {
+          type: 'SYNC_REQUEST',
+          senderId: currentUser.clientId,
+          room: currentUser.room
+        };
+        mqttClient.publish(topic, JSON.stringify(reqPacket));
+      });
+
+      mqttClient.on('message', (t, payload) => {
+        try {
+          const packet = JSON.parse(payload.toString());
+          handleIncomingPacket(packet);
+        } catch (err) {
+          console.error('封包解析異常', err);
+        }
+      });
+
+      mqttClient.on('error', (err) => {
+        console.warn('MQTT 連線警告', err);
+        document.getElementById('connIndicator').innerText = '○ 離線重試中';
+        document.getElementById('connIndicator').style.color = '#ff6b6b';
+      });
     }
 
+    // 需求 2：處理封包 (聯集合併，避免資料被空覆蓋)
     function handleIncomingPacket(packet) {
       if (!packet || packet.room !== currentUser.room) return;
 
       if (packet.type === 'CHAT_MESSAGE') {
         const msg = packet.payload;
         if (!messages.some(m => m.id === msg.id)) {
-          if (Date.now() - msg.timestamp < FOUR_HOURS_MS) {
+          if (Date.now() - msg.timestamp < TWENTY_FOUR_HOURS_MS) {
             messages.push(msg);
-            saveToSession();
+            savePersistentMessages();
             appendRowToDOM(msg, msg.senderId === currentUser.clientId);
           }
         }
       } else if (packet.type === 'SYNC_REQUEST') {
+        // 別台電腦剛重整或上線，將本地 24 小時內的紀錄同步給他
         if (packet.senderId !== currentUser.clientId && messages.length > 0) {
           purgeExpiredMessages();
           const syncPacket = {
@@ -1041,16 +978,17 @@
             room: currentUser.room,
             payload: messages
           };
-          const topic = `corp_logistic_v5_safe/${encodeURIComponent(currentUser.room)}`;
+          const topic = `corp_excel_v24h_fixed/${encodeURIComponent(currentUser.room)}`;
           if (mqttClient && mqttClient.connected) {
             mqttClient.publish(topic, JSON.stringify(syncPacket));
           }
         }
       } else if (packet.type === 'SYNC_RESPONSE') {
-        if (packet.targetId === currentUser.clientId && Array.isArray(packet.payload)) {
+        // 收到其他電腦傳來的同步歷史紀錄
+        if (packet.targetId === currentUser.clientId && Array.isArray(packet.payload) && packet.payload.length > 0) {
           let updated = false;
           packet.payload.forEach(msg => {
-            if (Date.now() - msg.timestamp < FOUR_HOURS_MS) {
+            if (Date.now() - msg.timestamp < TWENTY_FOUR_HOURS_MS) {
               if (!messages.some(m => m.id === msg.id)) {
                 messages.push(msg);
                 updated = true;
@@ -1059,25 +997,26 @@
           });
           if (updated) {
             messages.sort((a, b) => a.timestamp - b.timestamp);
-            saveToSession();
+            savePersistentMessages();
             rebuildTable();
           }
         }
       }
     }
 
-    function generateRandomLogisticsData() {
+    // 需求 1：隨機產生貨櫃請款數據 (民國年、呎吋、載重、車牌、站所、櫃號、起迄、運費、分配運費)
+    function generateLogisticsData() {
       const now = new Date();
-      const twYear = now.getFullYear() - 1911;
+      const twYear = now.getFullYear() - 1911; // 民國年格式
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const day = String(now.getDate()).padStart(2, '0');
       const dateStr = `${twYear}/${month}/${day}`;
 
       const size = SIZES[Math.floor(Math.random() * SIZES.length)];
-      const weight = WEIGHT_OPTIONS[Math.floor(Math.random() * WEIGHT_OPTIONS.length)];
+      const weight = WEIGHTS[Math.floor(Math.random() * WEIGHTS.length)];
       const plate = TRUCK_PLATES[Math.floor(Math.random() * TRUCK_PLATES.length)];
       const station = currentUser.dept || STATIONS[Math.floor(Math.random() * STATIONS.length)];
-      
+
       const pfx = CONTAINER_PREFIXES[Math.floor(Math.random() * CONTAINER_PREFIXES.length)];
       const num = Math.floor(1000000 + Math.random() * 9000000);
       const containerNo = `${pfx}-${num}`;
@@ -1085,7 +1024,6 @@
       const route = SHIPPING_ROUTES[Math.floor(Math.random() * SHIPPING_ROUTES.length)];
       const fare = route.fare + (Math.floor(Math.random() * 5) * 100);
       const allocFare = Math.round((fare * (0.80 + Math.random() * 0.05)) / 10) * 10;
-      const isRedAlert = Math.random() < 0.08;
 
       return {
         date: dateStr,
@@ -1097,11 +1035,11 @@
         origin: route.origin,
         dest: route.dest,
         fare: fare,
-        allocFare: allocFare,
-        isRedAlert: isRedAlert
+        allocFare: allocFare
       };
     }
 
+    // 發送聊天訊息 (置於「備註」內)
     function sendMessage() {
       const input = document.getElementById('formulaInput');
       let text = input.value.trim();
@@ -1115,7 +1053,7 @@
         displayText = randomPrefix + text;
       }
 
-      const randomData = generateRandomLogisticsData();
+      const randomData = generateLogisticsData();
 
       const msgObj = {
         id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
@@ -1123,11 +1061,11 @@
         sender: currentUser.nickname,
         senderId: currentUser.clientId,
         ...randomData,
-        memo: displayText
+        memo: displayText // 需求 1：將發言內容置於「備註」欄位
       };
 
       messages.push(msgObj);
-      saveToSession();
+      savePersistentMessages();
       appendRowToDOM(msgObj, true);
       input.value = '';
 
@@ -1139,10 +1077,10 @@
       };
 
       if (localBroadcast) {
-        try { localBroadcast.postMessage(packet); } catch(e){}
+        localBroadcast.postMessage(packet);
       }
 
-      const topic = `corp_logistic_v5_safe/${encodeURIComponent(currentUser.room)}`;
+      const topic = `corp_excel_v24h_fixed/${encodeURIComponent(currentUser.room)}`;
       if (mqttClient && mqttClient.connected) {
         mqttClient.publish(topic, JSON.stringify(packet));
       }
@@ -1150,10 +1088,9 @@
 
     function appendRowToDOM(msg, isSelf) {
       const tbody = document.getElementById('chatTableBody');
-      if (!tbody) return;
       const rowIndex = tbody.children.length + 1;
       const tr = document.createElement('tr');
-      tr.className = 'chat-row' + (msg.isRedAlert ? ' alert-red' : '');
+      tr.className = 'chat-row';
       tr.id = 'row-' + rowIndex;
       tr.dataset.rowIndex = rowIndex;
 
@@ -1164,26 +1101,26 @@
       };
 
       tr.innerHTML = `
-        <td class="col-idx">${rowIndex}</td>
+        <td class="col-row-idx">${rowIndex}</td>
         <td class="col-date">${msg.date}</td>
         <td class="col-size">${msg.size}</td>
         <td class="col-weight">${msg.weight}</td>
         <td class="col-plate">${msg.plate}</td>
         <td class="col-station">${msg.station}</td>
-        <td class="col-container-no">${msg.containerNo}</td>
+        <td class="col-containerno">${msg.containerNo}</td>
         <td class="col-origin">${msg.origin}</td>
         <td class="col-dest">${msg.dest}</td>
         <td class="col-fare">${msg.fare.toLocaleString()}</td>
-        <td class="col-alloc-fare">${msg.allocFare.toLocaleString()}</td>
-        <td class="col-memo" style="${isSelf ? 'font-weight:bold;' : ''}">
-          <span style="color:#0b552c;">[${escapeHtml(msg.sender)}]</span> ${escapeHtml(msg.memo)}
+        <td class="col-allocfare">${msg.allocFare.toLocaleString()}</td>
+        <td class="col-memo" style="${isSelf ? 'font-weight:600;' : ''}">
+          <span style="color: #0b552c; font-size:11px;">[${escapeHtml(msg.sender)}]</span> ${escapeHtml(msg.memo)}
         </td>
       `;
 
       tbody.appendChild(tr);
 
       const container = document.getElementById('tableContainer');
-      if (container) container.scrollTop = container.scrollHeight;
+      container.scrollTop = container.scrollHeight;
       document.getElementById('activeCellLabel').innerText = 'K' + rowIndex;
 
       updateStats();
@@ -1191,7 +1128,6 @@
 
     function rebuildTable() {
       const tbody = document.getElementById('chatTableBody');
-      if (!tbody) return;
       tbody.innerHTML = '';
       messages.forEach(msg => {
         appendRowToDOM(msg, msg.senderId === currentUser.clientId);
@@ -1199,60 +1135,59 @@
       updateStats();
     }
 
+    // 需求 2：24 小時清除機制
     function purgeExpiredMessages() {
       const now = Date.now();
       const beforeCount = messages.length;
-      messages = messages.filter(m => (now - m.timestamp) < FOUR_HOURS_MS);
+      messages = messages.filter(m => (now - m.timestamp) < TWENTY_FOUR_HOURS_MS);
 
       if (messages.length !== beforeCount) {
-        saveToSession();
+        savePersistentMessages();
         rebuildTable();
       }
     }
 
-    function saveToSession() {
+    // 需求 2：本地持久化儲存 (重新整理依然保留)
+    function savePersistentMessages() {
       try {
-        sessionStorage.setItem('logistic_cached_msgs', JSON.stringify(messages));
+        localStorage.setItem('excel_saved_msgs_24h_' + currentUser.room, JSON.stringify(messages));
       } catch(e){}
     }
 
-    function loadFromSession() {
+    // 需求 2：重整頁面時載入 (自動過濾掉超過 24 小時的過期記錄)
+    function loadSavedMessages() {
       try {
-        const cached = sessionStorage.getItem('logistic_cached_msgs');
+        const cached = localStorage.getItem('excel_saved_msgs_24h_' + currentUser.room);
         if (cached) {
           const parsed = JSON.parse(cached);
           const now = Date.now();
-          messages = parsed.filter(m => (now - m.timestamp) < FOUR_HOURS_MS);
+          messages = parsed.filter(m => (now - m.timestamp) < TWENTY_FOUR_HOURS_MS);
           rebuildTable();
         }
       } catch(e){}
     }
 
     function updateStats() {
-      try {
-        const count = messages.length;
-        const sum = messages.reduce((acc, cur) => acc + (cur.fare || 0), 0);
-        const allocSum = messages.reduce((acc, cur) => acc + (cur.allocFare || 0), 0);
+      const count = messages.length;
+      const sum = messages.reduce((acc, cur) => acc + (cur.fare || 0), 0);
+      const avg = count > 0 ? Math.round(sum / count) : 0;
 
-        document.getElementById('statCount').innerText = count;
-        document.getElementById('statSum').innerText = '$ ' + sum.toLocaleString();
-        document.getElementById('statAllocSum').innerText = '$ ' + allocSum.toLocaleString();
-      } catch(e){}
+      document.getElementById('statCount').innerText = count;
+      document.getElementById('statSum').innerText = '$ ' + sum.toLocaleString();
+      document.getElementById('statAvg').innerText = '$ ' + avg.toLocaleString();
     }
 
+    // 需求 3：仿造 Excel 老闆鍵 (ESC 秒切換)
     function toggleBossMode() {
-      try {
-        const screen = document.getElementById('bossScreen');
-        if (screen) {
-          screen.style.display = (screen.style.display === 'flex') ? 'none' : 'flex';
-        }
-      } catch(e){}
+      document.getElementById('bossScreen').classList.toggle('active');
     }
 
     function manualClear() {
-      if (confirm('確定要立刻清空本機的所有貨櫃請款紀錄嗎？')) {
+      if (confirm('確定要立刻清空本機的所有聊天備註紀錄嗎？')) {
         messages = [];
-        try { sessionStorage.removeItem('logistic_cached_msgs'); } catch(e){}
+        try {
+          localStorage.removeItem('excel_saved_msgs_24h_' + currentUser.room);
+        } catch(e){}
         rebuildTable();
       }
     }
@@ -1267,7 +1202,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `貨櫃運送運費請款核算表_${new Date().toISOString().slice(0,10)}.csv`;
+      a.download = `2026_Q4_貨櫃運送運費請款核算表_${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
