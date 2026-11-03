@@ -186,7 +186,7 @@
     }
     .btn-tool:hover { background: #e5e5e5; border-color: #ccc; }
 
-    /* 公式列 (發言輸入框) */
+    /* 公式列 */
     .formula-bar-container {
       display: flex;
       align-items: center;
@@ -680,7 +680,6 @@
     }
     .reset-btn:hover { background: #6d4c41; }
 
-    /* 印章蓋上去後的擬真旋轉淡出微動態 */
     .stamp-mark {
       filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
       animation: stampImpact 0.12s cubic-bezier(0.1, 0.9, 0.2, 1);
@@ -849,7 +848,7 @@
     🎯 內部稽核 / 舒壓小抽屜
   </div>
 
-  <!-- 側邊抽屜本體 (含深紅退件印章圖層) -->
+  <!-- 側邊抽屜本體 -->
   <div class="side-drawer" id="sideDrawer">
     <div class="drawer-header">
       <span>🔨 打小人 - 奧客/刁民/水貨退散符</span>
@@ -857,7 +856,7 @@
     </div>
     <div class="drawer-content">
       <div style="font-size:11px; color:#6d4c41; text-align:center; line-height:1.4;">
-        靜音摸魚專用！切換「退件章」可在小人臉上動態蓋下<b>深紅退件印泥章</b>！
+        直短髮、大臉微瞇小眼、身著<b>亮桃色 POLO 衫</b>，更胖更欠扁！
       </div>
 
       <div class="weapon-select-box">
@@ -871,141 +870,162 @@
         <div class="injury-progress" id="injuryProgress"></div>
       </div>
       <div class="hit-counter-box">
-        <span>傷勢狀態：<b id="injuryStateText" style="color:#2e7d32;">健康神氣</b></span>
+        <span>傷勢狀態：<b id="injuryStateText" style="color:#2e7d32;">神氣刁難</b></span>
         <span>累計挨打：<b id="hitCount" style="color:#d32f2f;">0</b> 下</span>
       </div>
 
       <!-- 打小人互動舞台 -->
       <div class="villain-stage" id="villainStage" onclick="strikeVillain(event)">
-        <!-- 向量小人本體 -->
+        <!-- 向量小人本體 (全新重製：大臉盤、瞇小眼、厚胖體態、亮桃色POLO衫) -->
         <div class="villain-character" id="villainChar">
           <svg viewBox="0 0 200 240" width="100%" height="100%" id="villainSvg">
             <defs>
-              <radialGradient id="faceGrad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#fff0ea"/>
-                <stop offset="100%" stop-color="#f5d0be"/>
+              <!-- 臉部漸層 -->
+              <radialGradient id="faceGrad" cx="50%" cy="45%" r="55%">
+                <stop offset="0%" stop-color="#fff5f0"/>
+                <stop offset="85%" stop-color="#fad2bf"/>
+                <stop offset="100%" stop-color="#f0bba4"/>
               </radialGradient>
-              <radialGradient id="bodyGrad" cx="50%" cy="50%" r="60%">
-                <stop offset="0%" stop-color="#e06d53"/>
-                <stop offset="100%" stop-color="#ab3a22"/>
-              </radialGradient>
+              
+              <!-- 亮桃色 POLO 衫漸層 (艷麗高彩度的桃紅) -->
+              <linearGradient id="poloPinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff1493"/>
+                <stop offset="50%" stop-color="#e91e63"/>
+                <stop offset="100%" stop-color="#c2185b"/>
+              </linearGradient>
             </defs>
 
-            <!-- 圓潤微胖身體 / 花襯衫外套 -->
-            <path id="bodyPath" d="M 40,165 C 28,185 20,230 20,240 L 180,240 C 180,230 172,185 160,165 C 145,150 125,148 100,148 C 75,148 55,150 40,165 Z" fill="url(#bodyGrad)" stroke="#661908" stroke-width="2.5" />
+            <!-- 更臃腫肥胖的身軀 / 亮桃紅色 POLO 衫 -->
+            <path id="bodyPath" d="M 22,170 C 12,190 6,230 6,240 L 194,240 C 194,230 188,190 178,170 C 160,154 135,150 100,150 C 65,150 40,154 22,170 Z" fill="url(#poloPinkGrad)" stroke="#880e4f" stroke-width="2.5" />
             
-            <!-- 碎花點綴 -->
-            <circle cx="65" cy="190" r="4" fill="#ffecb3" opacity="0.8"/>
-            <circle cx="135" cy="190" r="4" fill="#ffecb3" opacity="0.8"/>
-            <circle cx="100" cy="210" r="5" fill="#ffecb3" opacity="0.8"/>
-            <circle cx="75" cy="225" r="3.5" fill="#ffecb3" opacity="0.8"/>
-            <circle cx="125" cy="225" r="3.5" fill="#ffecb3" opacity="0.8"/>
+            <!-- POLO 衫肩膀與腹部微胖褶痕 -->
+            <path d="M 28,205 Q 48,198 62,210" stroke="#ad1457" stroke-width="2" fill="none" opacity="0.6"/>
+            <path d="M 172,205 Q 152,198 138,210" stroke="#ad1457" stroke-width="2" fill="none" opacity="0.6"/>
+            <path d="M 70,236 Q 100,230 130,236" stroke="#ad1457" stroke-width="2.5" fill="none" opacity="0.7"/>
 
-            <!-- 雙下巴與微胖脖子 -->
-            <ellipse cx="100" cy="148" rx="26" ry="14" fill="#ebd0c0" stroke="#cfa692" stroke-width="1.5"/>
-            <path d="M 82,143 Q 100,154 118,143" stroke="#b0806c" stroke-width="2" fill="none" />
+            <!-- POLO 衫白色門襟 (前胸鈕扣排) -->
+            <rect x="93" y="152" width="14" height="42" rx="2" fill="#ffffff" stroke="#e0e0e0" stroke-width="1.2"/>
+            <circle cx="100" cy="162" r="2.2" fill="#e91e63"/>
+            <circle cx="100" cy="174" r="2.2" fill="#e91e63"/>
+            <circle cx="100" cy="186" r="2.2" fill="#e91e63"/>
 
-            <!-- 豐腴微胖圓臉 -->
-            <ellipse id="faceEl" cx="100" cy="102" rx="44" ry="43" fill="url(#faceGrad)" stroke="#c29480" stroke-width="2.2"/>
+            <!-- POLO 衫白色翻領 (經典大媽立翻領) -->
+            <polygon points="68,148 95,154 84,172 60,156" fill="#ffffff" stroke="#c2185b" stroke-width="1.5"/>
+            <polygon points="132,148 105,154 116,172 140,156" fill="#ffffff" stroke="#c2185b" stroke-width="1.5"/>
+
+            <!-- 肥厚微胖的三層雙下巴 -->
+            <ellipse cx="100" cy="152" rx="36" ry="16" fill="#ebd0c0" stroke="#cfa692" stroke-width="1.5"/>
+            <ellipse cx="100" cy="144" rx="30" ry="12" fill="#f4dbcd" stroke="#cfa692" stroke-width="1.2"/>
+            <path d="M 74,142 Q 100,158 126,142" stroke="#b0806c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M 80,151 Q 100,162 120,151" stroke="#b0806c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+            <!-- 大臉盤 (更寬、更下垂臃腫的圓方大臉) -->
+            <path id="faceEl" d="M 46,95 C 44,60 70,44 100,44 C 130,44 156,60 154,95 C 158,118 152,144 126,146 C 114,147 100,148 86,147 C 48,144 42,118 46,95 Z" fill="url(#faceGrad)" stroke="#c29480" stroke-width="2.2"/>
             
-            <!-- 原生腮紅 -->
-            <ellipse id="normalBlushL" cx="68" cy="115" rx="10" ry="7" fill="#ff8a80" opacity="0.45"/>
-            <ellipse id="normalBlushR" cx="132" cy="115" rx="10" ry="7" fill="#ff8a80" opacity="0.45"/>
+            <!-- 大臉腮肉與鬆弛肉 -->
+            <ellipse id="normalBlushL" cx="62" cy="116" rx="12" ry="8" fill="#ff4081" opacity="0.3"/>
+            <ellipse id="normalBlushR" cx="138" cy="116" rx="12" ry="8" fill="#ff4081" opacity="0.3"/>
 
-            <!-- 法令紋 -->
-            <path d="M 83,115 Q 81,126 89,131" stroke="#ba8270" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M 117,115 Q 119,126 111,131" stroke="#ba8270" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <!-- 深刻挑剔的法令紋 (顯老顯兇) -->
+            <path d="M 81,114 Q 76,128 86,135" stroke="#ba8270" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M 119,114 Q 124,128 114,135" stroke="#ba8270" stroke-width="2" fill="none" stroke-linecap="round"/>
 
-            <!-- 鼻子 -->
-            <path id="noseEl" d="M 96,108 Q 100,113 104,108" stroke="#aa7a68" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- 肥大圓鼻頭 -->
+            <path id="noseEl" d="M 94,107 Q 100,114 106,107" stroke="#aa7a68" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M 90,108 Q 94,105 97,108" stroke="#ba8270" stroke-width="1.5" fill="none"/>
+            <path d="M 110,108 Q 106,105 103,108" stroke="#ba8270" stroke-width="1.5" fill="none"/>
 
-            <!-- 正常的嘴巴 (微嘟碎念) -->
+            <!-- 碎念挑剔的微下撇厚嘴唇 -->
             <g id="normalMouth">
-              <path d="M 88,127 Q 100,123 112,127" stroke="#900" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-              <path d="M 94,130 Q 100,135 106,130" stroke="#b71c1c" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 86,128 Q 100,123 114,128" stroke="#880e4f" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M 92,130 Q 100,137 108,130" stroke="#ad1457" stroke-width="2.2" fill="none" stroke-linecap="round"/>
             </g>
 
-            <!-- 眉毛 -->
+            <!-- 稀疏微挑的精明細眉毛 -->
             <g id="normalEyebrows">
-              <path d="M 72,83 Q 84,77 94,84" stroke="#1a1a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-              <path d="M 128,83 Q 116,77 106,84" stroke="#1a1a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+              <path d="M 68,82 Q 80,74 92,82" stroke="#111" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+              <path d="M 132,82 Q 120,74 108,82" stroke="#111" stroke-width="2.4" fill="none" stroke-linecap="round"/>
             </g>
 
-            <!-- 正常的眼睛 (不戴眼鏡、微瞇挑剔) -->
+            <!-- 細小眼睛 (小眼瞇瞇縫、單眼皮、精明尖銳微吊梢) -->
             <g id="normalEyes">
-              <ellipse cx="82" cy="94" rx="6.5" ry="4.5" fill="#fff" stroke="#333" stroke-width="1.5"/>
-              <circle cx="83" cy="94" r="3" fill="#111"/>
-              <circle cx="84" cy="93" r="1" fill="#fff"/>
-              <path d="M 70,95 L 65,94" stroke="#8d6e63" stroke-width="1.5"/>
-              <path d="M 71,98 L 66,99" stroke="#8d6e63" stroke-width="1.5"/>
+              <!-- 左眼 (極細縫) -->
+              <path d="M 72,92 Q 82,88 92,93" stroke="#212121" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+              <path d="M 74,93 Q 82,95 90,93" stroke="#555" stroke-width="1.4" fill="none"/>
+              <circle cx="82" cy="92" r="1.6" fill="#111"/>
+              <!-- 眼尾魚尾紋與眼袋肉 -->
+              <path d="M 66,90 L 61,88" stroke="#8d6e63" stroke-width="1.4"/>
+              <path d="M 67,93 L 62,94" stroke="#8d6e63" stroke-width="1.4"/>
+              <path d="M 74,98 Q 82,101 90,98" stroke="#ba8270" stroke-width="1.2" fill="none"/>
 
-              <ellipse cx="118" cy="94" rx="6.5" ry="4.5" fill="#fff" stroke="#333" stroke-width="1.5"/>
-              <circle cx="117" cy="94" r="3" fill="#111"/>
-              <circle cx="116" cy="93" r="1" fill="#fff"/>
-              <path d="M 130,95 L 135,94" stroke="#8d6e63" stroke-width="1.5"/>
-              <path d="M 129,98 L 134,99" stroke="#8d6e63" stroke-width="1.5"/>
+              <!-- 右眼 (極細縫) -->
+              <path d="M 128,92 Q 118,88 108,93" stroke="#212121" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+              <path d="M 126,93 Q 118,95 110,93" stroke="#555" stroke-width="1.4" fill="none"/>
+              <circle cx="118" cy="92" r="1.6" fill="#111"/>
+              <!-- 眼尾魚尾紋與眼袋肉 -->
+              <path d="M 134,90 L 139,88" stroke="#8d6e63" stroke-width="1.4"/>
+              <path d="M 133,93 L 138,94" stroke="#8d6e63" stroke-width="1.4"/>
+              <path d="M 126,98 Q 118,101 110,98" stroke="#ba8270" stroke-width="1.2" fill="none"/>
             </g>
 
-            <!-- 經典中年婦女黑短髮 (齊瀏海波波鮑伯頭) -->
-            <path id="hairBack" d="M 52,98 C 44,70 60,40 100,40 C 140,40 156,70 148,98 C 158,118 152,142 144,146 C 137,130 143,105 142,95 C 136,65 64,65 58,95 C 57,105 63,130 56,146 C 48,142 42,118 52,98 Z" fill="#181818" />
+            <!-- 俐落直短髮 (直短黑髮貼順包覆大臉盤) -->
+            <path id="hairBack" d="M 44,95 C 38,62 55,34 100,34 C 145,34 162,62 156,95 C 162,118 158,140 148,142 C 145,130 148,105 146,92 C 140,58 60,58 54,92 C 52,105 55,130 52,142 C 42,140 38,118 44,95 Z" fill="#141414" />
             
-            <!-- 額頭齊瀏海 (平整黑髮) -->
+            <!-- 額頭厚直齊瀏海 (平直分明蓋住大額頭) -->
             <g id="hairBangsNormal">
-              <path d="M 58,74 Q 100,77 142,74 L 142,88 Q 128,88 120,85 Q 110,89 100,85 Q 90,89 80,85 Q 72,88 58,88 Z" fill="#212121" stroke="#0d0d0d" stroke-width="1"/>
-              <path d="M 75,54 Q 100,50 125,54" stroke="#484848" stroke-width="2" fill="none" opacity="0.6"/>
+              <path d="M 50,68 Q 100,70 150,68 L 150,84 Q 135,84 125,81 Q 112,85 100,81 Q 88,85 75,81 Q 65,84 50,84 Z" fill="#1f1f1f" stroke="#0a0a0a" stroke-width="1.2"/>
+              <path d="M 68,48 Q 100,44 132,48" stroke="#424242" stroke-width="2" fill="none" opacity="0.6"/>
+              <!-- 直髮順垂細線 -->
+              <line x1="56" y1="88" x2="54" y2="128" stroke="#2c2c2c" stroke-width="1.2"/>
+              <line x1="144" y1="88" x2="146" y2="128" stroke="#2c2c2c" stroke-width="1.2"/>
             </g>
 
-            <!-- 識別證項鍊掛件 -->
-            <g id="badgeGroup">
-              <path d="M 88,160 L 100,185 L 112,160" stroke="#004d40" stroke-width="2" fill="none"/>
-              <rect x="91" y="185" width="18" height="24" rx="2" fill="#e0f2f1" stroke="#004d40" stroke-width="1.5"/>
-              <line x1="94" y1="192" x2="106" y2="192" stroke="#004d40" stroke-width="1.5"/>
-              <line x1="94" y1="197" x2="104" y2="197" stroke="#888" stroke-width="1"/>
-            </g>
-
-            <!-- 階段 1：輕傷 -->
+            <!-- 階段 1：輕傷 (歪嘴泛青、巴掌印) -->
             <g id="injuryStage1" style="display:none;">
-              <ellipse cx="115" cy="130" rx="5" ry="4" fill="#5c6bc0" opacity="0.6"/>
-              <path d="M 66,112 Q 68,118 64,124 M 70,110 Q 72,119 69,126 M 74,111 Q 76,120 73,127" stroke="#e53935" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+              <ellipse cx="120" cy="132" rx="6" ry="4.5" fill="#5c6bc0" opacity="0.6"/>
+              <path d="M 58,112 Q 60,120 56,126 M 63,110 Q 65,121 61,128 M 68,111 Q 70,122 66,129" stroke="#e53935" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/>
             </g>
 
-            <!-- 階段 2：中傷 -->
+            <!-- 階段 2：中傷 (黑眼圈、散亂直髮、嘴角流血) -->
             <g id="injuryStage2" style="display:none;">
-              <ellipse cx="118" cy="94" rx="14" ry="11" fill="#4a148c" opacity="0.45"/>
-              <path d="M 86,126 Q 96,136 114,123" stroke="#b71c1c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-              <path d="M 112,126 C 114,134 110,140 112,146" stroke="#b71c1c" stroke-width="2.5" fill="none"/>
-              <path d="M 85,84 L 88,96 L 93,85" stroke="#181818" stroke-width="2" fill="#181818"/>
-              <path d="M 105,85 L 109,95 L 112,84" stroke="#181818" stroke-width="2" fill="#181818"/>
+              <ellipse cx="118" cy="92" rx="15" ry="10" fill="#4a148c" opacity="0.5"/>
+              <path d="M 84,127 Q 96,138 116,124" stroke="#b71c1c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+              <path d="M 114,126 C 116,135 112,142 114,148" stroke="#b71c1c" stroke-width="2.5" fill="none"/>
+              <!-- 直瀏海打岔凌亂 -->
+              <path d="M 85,81 L 88,94 L 93,82" stroke="#141414" stroke-width="2" fill="#141414"/>
+              <path d="M 108,82 L 112,93 L 115,81" stroke="#141414" stroke-width="2" fill="#141414"/>
             </g>
 
-            <!-- 階段 3：重傷 -->
+            <!-- 階段 3：重傷 (額頭巨大腫包、雙眼XX、十字OK繃) -->
             <g id="injuryStage3" style="display:none;">
-              <ellipse cx="132" cy="62" rx="12" ry="10" fill="#ff7043" stroke="#d84315" stroke-width="2"/>
-              <path d="M 127,56 L 132,60 M 134,57 L 137,63" stroke="#fff" stroke-width="1.5"/>
-              <rect x="62" y="104" width="16" height="6" rx="1" fill="#ffe082" stroke="#ffb300" stroke-width="1" transform="rotate(30 70 107)"/>
-              <rect x="67" y="99" width="6" height="16" rx="1" fill="#ffe082" stroke="#ffb300" stroke-width="1" transform="rotate(30 70 107)"/>
-              <rect x="75" y="70" width="30" height="11" rx="2" fill="#80deea" stroke="#00acc1" stroke-width="1" opacity="0.9"/>
-              <g stroke="#37474f" stroke-width="3" stroke-linecap="round">
-                <line x1="77" y1="89" x2="87" y2="99"/>
-                <line x1="87" y1="89" x2="77" y2="99"/>
-                <line x1="113" y1="89" x2="123" y2="99"/>
-                <line x1="123" y1="89" x2="113" y2="99"/>
+              <ellipse cx="136" cy="56" rx="14" ry="11" fill="#ff7043" stroke="#d84315" stroke-width="2"/>
+              <path d="M 130,50 L 136,54 M 138,51 L 142,57" stroke="#fff" stroke-width="1.5"/>
+              <rect x="54" y="104" width="18" height="6.5" rx="1" fill="#ffe082" stroke="#ffb300" stroke-width="1" transform="rotate(28 63 107)"/>
+              <rect x="60" y="98" width="6.5" height="18" rx="1" fill="#ffe082" stroke="#ffb300" stroke-width="1" transform="rotate(28 63 107)"/>
+              <rect x="74" y="66" width="34" height="12" rx="2" fill="#80deea" stroke="#00acc1" stroke-width="1" opacity="0.9"/>
+              <!-- 雙眼 XX -->
+              <g stroke="#263238" stroke-width="3.2" stroke-linecap="round">
+                <line x1="74" y1="86" x2="86" y2="98"/>
+                <line x1="86" y1="86" x2="74" y2="98"/>
+                <line x1="112" y1="86" x2="124" y2="98"/>
+                <line x1="124" y1="86" x2="112" y2="98"/>
               </g>
             </g>
 
-            <!-- 階段 4：徹底崩潰 -->
+            <!-- 階段 4：徹底崩潰 (大哭淚海、眼冒金星、魂魄出竅) -->
             <g id="injuryStage4" style="display:none;">
-              <path d="M 75,98 Q 60,115 54,136" stroke="#42a5f5" stroke-width="3" fill="none" opacity="0.9"/>
-              <path d="M 125,98 Q 140,115 146,136" stroke="#42a5f5" stroke-width="3" fill="none" opacity="0.9"/>
-              <polygon points="100,32 103,40 111,40 105,45 107,53 100,48 93,53 95,45 89,40 97,40" fill="#ffd600" stroke="#f57f17" stroke-width="1"/>
-              <polygon points="68,48 70,54 76,54 71,58 73,64 68,60 63,64 65,58 60,54 66,54" fill="#ffd600" stroke="#f57f17" stroke-width="1"/>
-              <path d="M 148,50 Q 165,30 156,15 Q 145,2 165,0 Q 175,10 168,25 Q 160,40 152,50 Z" fill="#e0f7fa" opacity="0.75" stroke="#80deea" stroke-width="1"/>
-              <circle cx="160" cy="12" r="1.5" fill="#546e7a"/>
-              <circle cx="166" cy="10" r="1.5" fill="#546e7a"/>
-              <path d="M 160,18 Q 164,15 167,18" stroke="#546e7a" stroke-width="1" fill="none"/>
+              <path d="M 72,96 Q 54,115 48,138" stroke="#42a5f5" stroke-width="3.5" fill="none" opacity="0.9"/>
+              <path d="M 126,96 Q 144,115 150,138" stroke="#42a5f5" stroke-width="3.5" fill="none" opacity="0.9"/>
+              <polygon points="100,26 103,34 111,34 105,39 107,47 100,42 93,47 95,39 89,34 97,34" fill="#ffd600" stroke="#f57f17" stroke-width="1"/>
+              <polygon points="62,42 64,48 70,48 65,52 67,58 62,54 57,58 59,52 54,48 60,48" fill="#ffd600" stroke="#f57f17" stroke-width="1"/>
+              <!-- 魂魄白煙 -->
+              <path d="M 152,45 Q 170,25 160,12 Q 148,0 170,0 Q 180,8 172,22 Q 164,36 156,45 Z" fill="#e0f7fa" opacity="0.8" stroke="#80deea" stroke-width="1"/>
+              <circle cx="164" cy="9" r="1.5" fill="#455a64"/>
+              <circle cx="170" cy="7" r="1.5" fill="#455a64"/>
+              <path d="M 164,15 Q 168,12 171,15" stroke="#455a64" stroke-width="1" fill="none"/>
             </g>
 
-            <!-- 動態深紅印章印記專用容器 (會跟著小人震動) -->
+            <!-- 動態深紅印章印記專用容器 (會緊貼大臉一起震動) -->
             <g id="stampMarksContainer"></g>
           </svg>
         </div>
@@ -1571,7 +1591,7 @@
       });
     }
 
-    /* ====== 可視化負傷與打小人邏輯 (深紅退件章覆蓋) ====== */
+    /* ====== 打小人遊戲核心邏輯 (深紅印章 + 挨打進度) ====== */
     let currentWeapon = 'stamp';
     let hitCounter = 0;
 
@@ -1609,14 +1629,13 @@
       void char.offsetWidth;
       char.classList.add('hit');
 
-      // 若使用退件章，將印記永久蓋在小人身上
       if (currentWeapon === 'stamp') {
         applyRedStampMark(e);
       }
 
       updateInjuryVisuals();
 
-      // 產生受擊飄字
+      // 受擊文字浮現
       const stage = document.getElementById('villainStage');
       const rect = stage.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -1649,21 +1668,19 @@
       const cy = Math.max(45, Math.min(220, svgP.y));
 
       const word = STAMP_WORDS[Math.floor(Math.random() * STAMP_WORDS.length)];
-      const rot = Math.floor(Math.random() * 40) - 20; // 傾斜印泥感
+      const rot = Math.floor(Math.random() * 40) - 20;
       const stampG = document.createElementNS("http://www.w3.org/2000/svg", "g");
       stampG.setAttribute("class", "stamp-mark");
       stampG.setAttribute("transform", `translate(${cx}, ${cy}) rotate(${rot})`);
 
       const isCircle = Math.random() > 0.4;
       if (isCircle) {
-        // 雙圓環印章
         stampG.innerHTML = `
           <circle cx="0" cy="0" r="18" fill="none" stroke="#b71c1c" stroke-width="2.5" opacity="0.88"/>
           <circle cx="0" cy="0" r="15" fill="#ffebee" fill-opacity="0.35" stroke="#b71c1c" stroke-width="1" stroke-dasharray="2,1" opacity="0.85"/>
           <text x="0" y="4" text-anchor="middle" font-size="9" font-weight="900" fill="#b71c1c" font-family="'Microsoft JhengHei', sans-serif" letter-spacing="1" opacity="0.95">${word}</text>
         `;
       } else {
-        // 圓角方框印章
         stampG.innerHTML = `
           <rect x="-19" y="-12" width="38" height="24" rx="3" fill="#ffebee" fill-opacity="0.35" stroke="#b71c1c" stroke-width="2.5" opacity="0.88"/>
           <rect x="-16" y="-9" width="32" height="18" rx="1.5" fill="none" stroke="#b71c1c" stroke-width="0.8" opacity="0.85"/>
@@ -1673,7 +1690,6 @@
 
       container.appendChild(stampG);
 
-      // 上限保留 40 個印章避免 SVG 過載
       if (container.children.length > 40) {
         container.removeChild(container.firstChild);
       }
@@ -1691,7 +1707,6 @@
       const normalEyes = document.getElementById('normalEyes');
       const normalMouth = document.getElementById('normalMouth');
       const stateText = document.getElementById('injuryStateText');
-      const badge = document.getElementById('badgeGroup');
 
       if (hitCounter < 5) {
         stateText.innerText = "神氣刁難";
@@ -1735,7 +1750,6 @@
         st4.style.display = 'block';
         normalEyes.style.display = 'none';
         normalMouth.style.display = 'none';
-        badge.setAttribute('transform', 'rotate(25 100 185)');
       }
     }
 
@@ -1743,8 +1757,7 @@
     function resetVillain() {
       hitCounter = 0;
       document.getElementById('hitCount').innerText = '0';
-      document.getElementById('badgeGroup').removeAttribute('transform');
-      document.getElementById('stampMarksContainer').innerHTML = ''; // 清空所有印章印泥
+      document.getElementById('stampMarksContainer').innerHTML = '';
       updateInjuryVisuals();
     }
   </script>
