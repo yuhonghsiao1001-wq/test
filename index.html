@@ -504,6 +504,156 @@
       align-items: center;
       gap: 4px;
     }
+
+    /* ====== 側邊抽屜與打小人小遊戲樣式 ====== */
+    .side-drawer-tab {
+      position: fixed;
+      right: 0;
+      top: 140px;
+      background: #e65100;
+      color: white;
+      padding: 10px 5px;
+      border-radius: 6px 0 0 6px;
+      writing-mode: vertical-rl;
+      letter-spacing: 2px;
+      font-size: 11px;
+      cursor: pointer;
+      box-shadow: -2px 2px 8px rgba(0,0,0,0.18);
+      z-index: 1000;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .side-drawer-tab:hover {
+      background: #bf360c;
+      padding-right: 8px;
+    }
+
+    .side-drawer {
+      position: fixed;
+      top: 38px;
+      right: -320px;
+      width: 310px;
+      height: calc(100vh - 68px);
+      background: #fffdfa;
+      border-left: 2px solid #dcd7ce;
+      box-shadow: -6px 0 16px rgba(0,0,0,0.12);
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.28s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+    .side-drawer.open {
+      right: 0;
+    }
+
+    .drawer-header {
+      background: #4e342e;
+      color: #fff;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .drawer-close {
+      cursor: pointer;
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    .drawer-close:hover { opacity: 1; }
+
+    .drawer-content {
+      padding: 14px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .villain-stage {
+      width: 230px;
+      height: 250px;
+      background: radial-gradient(circle, #fff3e0 20%, #ffe0b2 90%);
+      border: 2px dashed #d7ccc8;
+      border-radius: 12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+      user-select: none;
+      overflow: hidden;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .villain-character {
+      width: 170px;
+      height: 230px;
+      transition: transform 0.05s ease;
+      position: relative;
+    }
+
+    .villain-character.hit {
+      animation: hitShake 0.15s ease-in-out;
+    }
+
+    @keyframes hitShake {
+      0% { transform: scale(0.92) rotate(0deg); }
+      25% { transform: scale(0.88) rotate(-7deg); }
+      75% { transform: scale(0.9) rotate(6deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .floating-text {
+      position: absolute;
+      font-size: 13px;
+      font-weight: 900;
+      color: #d32f2f;
+      text-shadow: 1px 1px 0 #fff;
+      pointer-events: none;
+      animation: floatUp 0.65s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+      z-index: 50;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translate(-50%, -20%) scale(0.8); }
+      50% { opacity: 1; transform: translate(-50%, -80%) scale(1.15); }
+      100% { opacity: 0; transform: translate(-50%, -140%) scale(1.3); }
+    }
+
+    .weapon-select-box {
+      display: flex;
+      gap: 8px;
+      font-size: 11px;
+    }
+    .weapon-btn {
+      padding: 4px 8px;
+      border: 1px solid #bcaaa4;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .weapon-btn.active {
+      background: #d84315;
+      color: white;
+      border-color: #bf360c;
+      font-weight: bold;
+    }
+
+    .hit-counter-box {
+      background: #efebe9;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: monospace;
+      color: #3e2723;
+      border: 1px solid #d7ccc8;
+    }
   </style>
 </head>
 <body>
@@ -554,6 +704,10 @@
       <button class="btn-tool" onclick="manualClear()">
         <span style="font-size:16px;">🧹</span>
         <span>立刻清空</span>
+      </button>
+      <button class="btn-tool" onclick="toggleSideDrawer()" title="打開打小人舒壓抽屜">
+        <span style="font-size:16px;">🥊</span>
+        <span>專案稽核</span>
       </button>
     </div>
 
@@ -608,7 +762,7 @@
     </div>
   </div>
 
-  <!-- Excel 儲存格資料表 (需求 1：11 個專用欄位) -->
+  <!-- Excel 儲存格資料表 (11 個專用欄位) -->
   <div class="sheet-wrapper">
     <div class="table-container" id="tableContainer">
       <table class="excel-table" id="excelTable">
@@ -651,6 +805,123 @@
       <span>平均運費: <b id="statAvg">$ 0</b></span>
       <span>|</span>
       <span>100% ⊕</span>
+    </div>
+  </div>
+
+  <!-- 側邊隱藏小抽屜標籤按鈕 -->
+  <div class="side-drawer-tab" id="drawerTab" onclick="toggleSideDrawer()">
+    🎯 內部稽核 / 舒壓小抽屜
+  </div>
+
+  <!-- 側邊抽屜本體 (打小人舒壓小遊戲) -->
+  <div class="side-drawer" id="sideDrawer">
+    <div class="drawer-header">
+      <span>🔨 打小人 - 奧客/刁民/水貨退散符</span>
+      <span class="drawer-close" onclick="toggleSideDrawer()">✕</span>
+    </div>
+    <div class="drawer-content">
+      <div style="font-size:11px; color:#6d4c41; text-align:center; line-height:1.4;">
+        點擊下方的刁鑽中年主管／難搞客戶，宣洩調度怨氣！(免安裝免被抓)
+      </div>
+
+      <div class="weapon-select-box">
+        <button class="weapon-btn active" id="weaponShoe" onclick="setWeapon('shoe')">👡 破拖鞋 (重擊)</button>
+        <button class="weapon-btn" id="weaponStamp" onclick="setWeapon('stamp')">💮 退件章 (退關)</button>
+      </div>
+
+      <!-- 打小人互動舞台 -->
+      <div class="villain-stage" id="villainStage" onclick="strikeVillain(event)">
+        <!-- 向量繪製：中年婦女、黑短髮、齊瀏海、微胖、不戴眼鏡 -->
+        <div class="villain-character" id="villainChar">
+          <svg viewBox="0 0 200 240" width="100%" height="100%">
+            <defs>
+              <radialGradient id="faceGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fff0ea"/>
+                <stop offset="100%" stop-color="#f5d0be"/>
+              </radialGradient>
+              <radialGradient id="bodyGrad" cx="50%" cy="50%" r="60%">
+                <stop offset="0%" stop-color="#e06d53"/>
+                <stop offset="100%" stop-color="#ab3a22"/>
+              </radialGradient>
+            </defs>
+
+            <!-- 圓潤微胖身體 / 花襯衫外套 -->
+            <path d="M 40,165 C 28,185 20,230 20,240 L 180,240 C 180,230 172,185 160,165 C 145,150 125,148 100,148 C 75,148 55,150 40,165 Z" fill="url(#bodyGrad)" stroke="#661908" stroke-width="2.5" />
+            
+            <!-- 碎花圖案點綴 (中年感) -->
+            <circle cx="65" cy="190" r="4" fill="#ffecb3" opacity="0.8"/>
+            <circle cx="135" cy="190" r="4" fill="#ffecb3" opacity="0.8"/>
+            <circle cx="100" cy="210" r="5" fill="#ffecb3" opacity="0.8"/>
+            <circle cx="75" cy="225" r="3.5" fill="#ffecb3" opacity="0.8"/>
+            <circle cx="125" cy="225" r="3.5" fill="#ffecb3" opacity="0.8"/>
+
+            <!-- 雙下巴與微胖脖子 -->
+            <ellipse cx="100" cy="148" rx="26" ry="14" fill="#ebd0c0" stroke="#cfa692" stroke-width="1.5"/>
+            <path d="M 82,143 Q 100,154 118,143" stroke="#b0806c" stroke-width="2" fill="none" />
+
+            <!-- 豐腴微胖圓臉 -->
+            <ellipse cx="100" cy="102" rx="44" ry="43" fill="url(#faceGrad)" stroke="#c29480" stroke-width="2.2"/>
+            
+            <!-- 臉頰肉微下垂腮紅 -->
+            <ellipse cx="68" cy="115" rx="10" ry="7" fill="#ff8a80" opacity="0.45"/>
+            <ellipse cx="132" cy="115" rx="10" ry="7" fill="#ff8a80" opacity="0.45"/>
+
+            <!-- 挑剔的法令紋 -->
+            <path d="M 83,115 Q 81,126 89,131" stroke="#ba8270" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M 117,115 Q 119,126 111,131" stroke="#ba8270" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+            <!-- 嘴巴 (微嘟碎念、挑剔撇嘴) -->
+            <path d="M 88,127 Q 100,123 112,127" stroke="#900" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 94,130 Q 100,135 106,130" stroke="#b71c1c" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+            <!-- 鼻子 -->
+            <path d="M 96,108 Q 100,113 104,108" stroke="#aa7a68" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+            <!-- 不戴眼鏡的眼睛 (微瞇挑眉、中年精明主管感) -->
+            <!-- 眉毛 (微挑起細眉) -->
+            <path d="M 72,83 Q 84,77 94,84" stroke="#1a1a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <path d="M 128,83 Q 116,77 106,84" stroke="#1a1a1a" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+
+            <!-- 眼睛本體 (眼角魚尾紋與下垂肉) -->
+            <ellipse cx="82" cy="94" rx="6.5" ry="4.5" fill="#fff" stroke="#333" stroke-width="1.5"/>
+            <circle cx="83" cy="94" r="3" fill="#111"/>
+            <circle cx="84" cy="93" r="1" fill="#fff"/>
+            <path d="M 70,95 L 65,94" stroke="#8d6e63" stroke-width="1.5"/>
+            <path d="M 71,98 L 66,99" stroke="#8d6e63" stroke-width="1.5"/>
+
+            <ellipse cx="118" cy="94" rx="6.5" ry="4.5" fill="#fff" stroke="#333" stroke-width="1.5"/>
+            <circle cx="117" cy="94" r="3" fill="#111"/>
+            <circle cx="116" cy="93" r="1" fill="#fff"/>
+            <path d="M 130,95 L 135,94" stroke="#8d6e63" stroke-width="1.5"/>
+            <path d="M 129,98 L 134,99" stroke="#8d6e63" stroke-width="1.5"/>
+
+            <!-- 經典中年婦女黑短髮 (齊瀏海波波鮑伯頭) -->
+            <!-- 後髮外輪廓 -->
+            <path d="M 52,98 C 44,70 60,40 100,40 C 140,40 156,70 148,98 C 158,118 152,142 144,146 C 137,130 143,105 142,95 C 136,65 64,65 58,95 C 57,105 63,130 56,146 C 48,142 42,118 52,98 Z" fill="#181818" />
+            
+            <!-- 額頭厚齊瀏海 (平直分明) -->
+            <path d="M 58,74 Q 100,77 142,74 L 142,88 Q 128,88 120,85 Q 110,89 100,85 Q 90,89 80,85 Q 72,88 58,88 Z" fill="#212121" stroke="#0d0d0d" stroke-width="1"/>
+            
+            <!-- 髮絲光澤細節 -->
+            <path d="M 75,54 Q 100,50 125,54" stroke="#484848" stroke-width="2" fill="none" opacity="0.6"/>
+
+            <!-- 識別證項鍊掛件 (主管名牌) -->
+            <path d="M 88,160 L 100,185 L 112,160" stroke="#004d40" stroke-width="2" fill="none"/>
+            <rect x="91" y="185" width="18" height="24" rx="2" fill="#e0f2f1" stroke="#004d40" stroke-width="1.5"/>
+            <line x1="94" y1="192" x2="106" y2="192" stroke="#004d40" stroke-width="1.5"/>
+            <line x1="94" y1="197" x2="104" y2="197" stroke="#888" stroke-width="1"/>
+            <line x1="94" y1="202" x2="102" y2="202" stroke="#888" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="hit-counter-box">
+        本日痛擊次數：<span id="hitCount" style="font-weight:bold; color:#d32f2f;">0</span> 下
+      </div>
+
+      <div style="font-size:10px; color:#888; text-align:center;">
+        （按鍵盤 <b>ESC</b> 一樣能秒切換至 Excel 財務圖表避險）
+      </div>
     </div>
   </div>
 
@@ -744,7 +1015,7 @@
   </div>
 
   <script>
-    // 需求 2：設定聊天紀錄 24 小時清除 (24 * 60 * 60 * 1000 ms)
+    // 聊天紀錄 24 小時清除 (24 * 60 * 60 * 1000 ms)
     const GLOBAL_DEFAULT_ROOM = "CORP-LOGISTICS-HUB";
     const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
@@ -759,7 +1030,7 @@
     let mqttClient = null;
     let localBroadcast = null;
 
-    /* 需求 1：依截圖實務產生的隨機資料庫 */
+    /* 隨機資料庫 */
     const SIZES = ["40", "20", "40HQ", "40", "40", "20"];
     const WEIGHTS = ["重", "重", "重", "空", "24.5", "21.8", "26.3", "20.5", "3.8", "25.2"];
     const TRUCK_PLATES = [
@@ -808,7 +1079,7 @@
       }
       document.getElementById('displayRoomTag').innerText = currentUser.room;
 
-      // 需求 2：重整頁面立刻讀出 24 小時內的歷史資料
+      // 讀取 24 小時內的歷史資料
       loadSavedMessages();
 
       if (!currentUser.nickname) {
@@ -896,7 +1167,7 @@
       initConnection();
     }
 
-    // 需求 2：跨電腦連線 (MQTT WebSocket)
+    // 跨電腦連線 (MQTT WebSocket)
     function initConnection() {
       if (localBroadcast) localBroadcast.close();
       localBroadcast = new BroadcastChannel('corp_excel_' + currentUser.room);
@@ -929,7 +1200,7 @@
 
         mqttClient.subscribe(topic, { qos: 0 });
 
-        // 向所有在線電腦廣播請求同步最新歷史紀錄
+        // 廣播請求同步最新歷史紀錄
         const reqPacket = {
           type: 'SYNC_REQUEST',
           senderId: currentUser.clientId,
@@ -954,7 +1225,6 @@
       });
     }
 
-    // 需求 2：處理封包 (聯集合併，避免資料被空覆蓋)
     function handleIncomingPacket(packet) {
       if (!packet || packet.room !== currentUser.room) return;
 
@@ -968,7 +1238,6 @@
           }
         }
       } else if (packet.type === 'SYNC_REQUEST') {
-        // 別台電腦剛重整或上線，將本地 24 小時內的紀錄同步給他
         if (packet.senderId !== currentUser.clientId && messages.length > 0) {
           purgeExpiredMessages();
           const syncPacket = {
@@ -984,7 +1253,6 @@
           }
         }
       } else if (packet.type === 'SYNC_RESPONSE') {
-        // 收到其他電腦傳來的同步歷史紀錄
         if (packet.targetId === currentUser.clientId && Array.isArray(packet.payload) && packet.payload.length > 0) {
           let updated = false;
           packet.payload.forEach(msg => {
@@ -1004,10 +1272,9 @@
       }
     }
 
-    // 需求 1：隨機產生貨櫃請款數據 (民國年、呎吋、載重、車牌、站所、櫃號、起迄、運費、分配運費)
     function generateLogisticsData() {
       const now = new Date();
-      const twYear = now.getFullYear() - 1911; // 民國年格式
+      const twYear = now.getFullYear() - 1911;
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const day = String(now.getDate()).padStart(2, '0');
       const dateStr = `${twYear}/${month}/${day}`;
@@ -1039,7 +1306,6 @@
       };
     }
 
-    // 發送聊天訊息 (置於「備註」內)
     function sendMessage() {
       const input = document.getElementById('formulaInput');
       let text = input.value.trim();
@@ -1061,7 +1327,7 @@
         sender: currentUser.nickname,
         senderId: currentUser.clientId,
         ...randomData,
-        memo: displayText // 需求 1：將發言內容置於「備註」欄位
+        memo: displayText
       };
 
       messages.push(msgObj);
@@ -1135,7 +1401,6 @@
       updateStats();
     }
 
-    // 需求 2：24 小時清除機制
     function purgeExpiredMessages() {
       const now = Date.now();
       const beforeCount = messages.length;
@@ -1147,14 +1412,12 @@
       }
     }
 
-    // 需求 2：本地持久化儲存 (重新整理依然保留)
     function savePersistentMessages() {
       try {
         localStorage.setItem('excel_saved_msgs_24h_' + currentUser.room, JSON.stringify(messages));
       } catch(e){}
     }
 
-    // 需求 2：重整頁面時載入 (自動過濾掉超過 24 小時的過期記錄)
     function loadSavedMessages() {
       try {
         const cached = localStorage.getItem('excel_saved_msgs_24h_' + currentUser.room);
@@ -1177,9 +1440,14 @@
       document.getElementById('statAvg').innerText = '$ ' + avg.toLocaleString();
     }
 
-    // 需求 3：仿造 Excel 老闆鍵 (ESC 秒切換)
+    // 老闆鍵
     function toggleBossMode() {
-      document.getElementById('bossScreen').classList.toggle('active');
+      const boss = document.getElementById('bossScreen');
+      boss.classList.toggle('active');
+      // 老闆鍵觸發時，自動關閉小抽屜以求保密
+      if (boss.classList.contains('active')) {
+        document.getElementById('sideDrawer').classList.remove('open');
+      }
     }
 
     function manualClear() {
@@ -1217,6 +1485,62 @@
           "'": '&#039;'
         }[m];
       });
+    }
+
+    /* ====== 打小人抽屜互動遊戲邏輯 ====== */
+    let currentWeapon = 'shoe';
+    let hitCounter = 0;
+
+    const HIT_TEXTS = [
+      "啪！消滅刁客！",
+      "退單無效！",
+      "扣留重櫃！",
+      "罰款加倍！",
+      "駁回請款！",
+      "退回補件！",
+      "延滯費算你的！",
+      "閉嘴不要催！",
+      "退關自負！",
+      "稽核不合格！"
+    ];
+
+    function toggleSideDrawer() {
+      document.getElementById('sideDrawer').classList.toggle('open');
+    }
+
+    function setWeapon(type) {
+      currentWeapon = type;
+      document.getElementById('weaponShoe').classList.toggle('active', type === 'shoe');
+      document.getElementById('weaponStamp').classList.toggle('active', type === 'stamp');
+    }
+
+    function strikeVillain(e) {
+      hitCounter++;
+      document.getElementById('hitCount').innerText = hitCounter;
+
+      const char = document.getElementById('villainChar');
+      char.classList.remove('hit');
+      void char.offsetWidth; // 強制重繪以重播動畫
+      char.classList.add('hit');
+
+      // 產生受擊飄字
+      const stage = document.getElementById('villainStage');
+      const rect = stage.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const floatEl = document.createElement('div');
+      floatEl.className = 'floating-text';
+      floatEl.style.left = x + 'px';
+      floatEl.style.top = y + 'px';
+
+      const randomWord = HIT_TEXTS[Math.floor(Math.random() * HIT_TEXTS.length)];
+      floatEl.innerText = (currentWeapon === 'shoe' ? '👡 ' : '💮 ') + randomWord;
+      stage.appendChild(floatEl);
+
+      setTimeout(() => {
+        if (floatEl.parentNode) floatEl.parentNode.removeChild(floatEl);
+      }, 700);
     }
   </script>
 </body>
